@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Hourglass } from 'react-loader-spinner'
+import { getDatabase, ref, set } from "firebase/database";
 
 const Mybutton = styled(Button)({
   fontSize: '20px',
@@ -28,6 +29,7 @@ const Mybutton = styled(Button)({
 
 
 const Registration = () => {
+  const db = getDatabase();
   let navigate= useNavigate()
   const auth = getAuth();
   let [openeye , setOpeneye] = useState(true)
@@ -49,13 +51,18 @@ const Registration = () => {
     createUserWithEmailAndPassword(auth, input.email , input.password)
   .then((userCredential) => {
 
-    sendEmailVerification(auth.currentUser)
-  .then(() => {
+  //   sendEmailVerification(auth.currentUser)
+  // .then(() => {
     console.log(userCredential)
+    set(ref(db, 'users/' ),   {
+      username: input.fullname,
+      email: userCredential.users.email,
+      profile_picture : "https://firebasestorage.googleapis.com/v0/b/mychatapp-34da9.appspot.com/o/J23-%20107047%20%20Apr---%2031%20---23%20jpg-%20(1)%20(1).jpg?alt=media&token=11656920-8724-4ddf-bdec-7cf62fd3b45b"
+    });
     toast("verification mail send")
     navigate("/login")
     setLoader(true)
-  });
+  // });
  
     
     
@@ -116,11 +123,11 @@ const Registration = () => {
   }
 
 
-  useEffect(()=>{
-    if(userinfo != null){
-      navigate("/home")
-    }
-  },[])
+  // useEffect(()=>{
+  //   if(userinfo != null){
+  //     navigate("/home")
+  //   }
+  // },[])
   
   
   return (

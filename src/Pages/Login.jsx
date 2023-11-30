@@ -64,11 +64,11 @@ const Login = () => {
     password : "",
   
   })
-   useEffect(()=>{
-    if(userinfo != null){
-      navigate("/home")
-    }
-   },[])
+  //  useEffect(()=>{
+  //   if(userinfo != null){
+  //     navigate("/home")
+  //   }
+  //  },[])
   let handlechange =(e)=>{
     console.log({[e.target.name] : e.target.value});
     setInput({...input, [e.target.name] : e.target.value})

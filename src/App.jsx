@@ -12,6 +12,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import Registration from './Pages/Registration';
 import Login from './Pages/Login';
 import Homepage from './Pages/Homepage';
+import RootLayout from './components/RootLayout';
+import Chat from './Pages/Chat'
+import Group from './Pages/Group'
+import Friends from './Pages/Friends';
+import People from './Pages/People'
 
 
 function App() {
@@ -28,10 +33,37 @@ function App() {
         element={<Login />}
       >
         </Route>
+
         <Route
-        path="/home"
+        path="/page"
+        element={<RootLayout />}
+      >
+        <Route
+        path="home"
         element={<Homepage />}
       >
+        </Route>
+        <Route
+        path="chat"
+        element={<Chat/>}
+      >
+        </Route>
+        <Route
+        path="group"
+        element={<Group/>}
+      >
+        </Route>
+        <Route
+        path="friends"
+        element={<Friends />}
+      >
+        </Route>
+        <Route
+        path="people"
+        element={<People/>}
+      >
+        </Route>
+
         </Route>
     </Route>
     )

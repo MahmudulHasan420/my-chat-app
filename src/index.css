@@ -81,3 +81,134 @@
 .reglink{
     text-decoration: none;
 }
+
+.sidebar{
+    width: 160px;
+    height: 100vh;
+    -webkit-box-shadow: 10px 10px 19px -12px rgba(0,0,0,0.75);
+    -moz-box-shadow: 10px 10px 19px -12px rgba(0,0,0,0.75);
+    box-shadow: 10px 10px 19px -12px rgba(0,0,0,0.75);
+    display: flex;
+    flex-direction: column;
+    gap: 29px;
+}
+.sidebar h1{
+    font-family: 'Inter', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    margin-top: 50px;
+    margin-bottom: 30px;
+    margin-left: 24px;
+
+}
+.sidebarHome{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: 24px;
+}
+.sidebarHome h4{
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+}
+.sidebarIcon{
+    font-size: 26px;
+}
+
+a:-webkit-any-link {
+    color: black;
+    cursor: pointer;
+    text-decoration: none;
+}
+.sidebaractive{
+    position: relative;
+}
+.sidebaractive:after{
+    width: 110px;
+    height: 40px;
+    position: absolute;
+    left:-10px ;
+    top: -6px;
+    background: #32375C;
+    content: "";
+    z-index: -1;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.sidebaractive h4{
+    color: white;
+    font-weight: 600px;
+}
+.sidebaractive .sidebarIcon{
+    color:white;
+}
+.chatcom{
+    width: 94%;
+    margin-left: 24px;
+    -webkit-box-shadow: 10px 10px 19px -12px rgba(0,0,0,0.75);
+    -moz-box-shadow: 10px 10px 19px -12px rgba(0,0,0,0.75);
+    box-shadow: 10px 10px 19px -12px rgba(0,0,0,0.75);
+    padding: 16px;
+    height: 44vh;
+    overflow-y: scroll;
+    
+    
+}
+.chatcomhaeder{
+    display: flex; 
+    justify-content: space-between;
+    
+}
+.chatcomSearch{
+    width: 100%;
+    height: 30px;
+
+}
+.chatcombtn{
+   padding: 5px;
+   border: 0;
+   background: white;
+}
+.chatcomSearchBox{
+    position: relative;
+    margin-top: 16px;
+}
+.searchIcon{
+    position: absolute;
+    left: 7px;
+    top: 5px;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.searchIcon p{
+    font-size: 14px;
+}
+
+.chatcomMsg:first-child{
+    margin-top: 48px;
+}
+.chatcomMsg{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 24px;
+
+}
+.chatcomName{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.chatcomName .pName{
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+}
+.chatcomTime{
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+}
