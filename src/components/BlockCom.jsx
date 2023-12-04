@@ -7,7 +7,7 @@ const BlockCom = () => {
   return (
     <div className='chatcom'>
     <div className='chatcomhaeder'>
-        <h2>Chat</h2>
+        <h2>Block List</h2>
         <button className='chatcombtn'><TbDotsVertical/></button>
     </div>
     <div className='chatcomSearchBox'>
