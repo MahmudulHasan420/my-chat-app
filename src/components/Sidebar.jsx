@@ -1,21 +1,120 @@
-import React, { useState } from 'react'
+import React, { useState ,createRef } from 'react'
 import { AiOutlineHome } from "react-icons/ai";
 import { CiChat2 } from "react-icons/ci";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { CiUser } from "react-icons/ci";
 import { TbUserSearch } from "react-icons/tb";
 import { Link } from 'react-router-dom'; 
+import profile from '../assets/profile.png'
+import { useDispatch, useSelector } from 'react-redux';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import Cropper from "react-cropper";
+import "cropperjs/dist/cropper.css";
+import { getStorage, ref, uploadString ,getDownloadURL } from "firebase/storage";
+import { getAuth, updateProfile , signOut } from "firebase/auth";
+import { loggeduser } from '../slices/userSlice';
+import { useNavigate } from 'react-router';
+
+const defaultSrc =
+  "https://raw.githubusercontent.com/roadmanfong/react-cropper/master/example/img/child.jpg";
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
 
 
 const Sidebar = () => {
-    let  [pathnam , setPathnam] = useState()
-    let handleLink =()=>{
+        let  [pathnam , setPathnam] = useState()
+        let handleLink =()=>{
         setPathnam(window.location.pathname)
        }
+       let userinfor = useSelector(state =>state.activeuser.value)
+       let dispatch= useDispatch()
+       let navigate = useNavigate()
+       console.log(userinfor)
+
+       const [open, setOpen] = React.useState(false);
+       const handleOpen = () => setOpen(true);
+       const handleClose = () => setOpen(false);
+       const [image, setImage] = useState(defaultSrc);
+       const [cropData, setCropData] = useState("#");
+       const cropperRef = createRef();
+       const storage = getStorage();
+       const auth = getAuth();
+    
+       
+
+
+       let handlelogout =()=>{
+
+        signOut(auth).then(() => {
+          navigate("/login")
+          dispatch(loggeduser(null))
+          localStorage.removeItem("user")
+         
+    })
+      
+      }
+
+
+       const onChange = (e) => {
+        e.preventDefault();
+        let files;
+        if (e.dataTransfer) {
+          files = e.dataTransfer.files;
+        } else if (e.target) {
+          files = e.target.files;
+        }
+        const reader = new FileReader();
+        reader.onload = () => {
+          setImage(reader.result);
+        };
+        reader.readAsDataURL(files[0]);
+      };
+    
+      const getCropData = () => {
+        if (typeof cropperRef.current?.cropper !== "undefined") {
+          setCropData(cropperRef.current?.cropper.getCroppedCanvas().toDataURL());
+          const storageRef = ref(storage, userinfor.uid);
+
+        const message4 = 'data:text/plain;base64,5b6p5Y+344GX44G+44GX44Gf77yB44GK44KB44Gn44Go44GG77yB';
+        uploadString(storageRef, cropperRef.current?.cropper.getCroppedCanvas().toDataURL(), 'data_url').then((snapshot) => {
+
+            getDownloadURL(storageRef).then((downloadURL) => {
+                console.log('File available at', downloadURL);
+                updateProfile(auth.currentUser, {
+                 photoURL: downloadURL
+                  }).then(() => {
+
+                    dispatch(loggeduser({...userinfor , photoURL:downloadURL}))
+                    localStorage.setItem('user', JSON.stringify({...userinfor , photoURL:downloadURL}))
+                    setImage("")
+    
+                  })
+              });
+           
+        
+});
+        }
+      };
+    
  
   return (
     <div className='sidebar'>
-        <h1>Chatt.</h1>
+        <h1 >Chatt.</h1>
+            <p className='sidebarName' >{userinfor.displayName}</p>
+        <img src={userinfor.photoURL} alt="" className='sidebarProfile' onClick={handleOpen} />
         <Link to="/page/home" onClick={handleLink} className={`sidebarHome ${window.location.pathname == "/page/home" ? "sidebaractive" : ""}`} >
             <AiOutlineHome  className='sidebarIcon'/>
             <h4>Home</h4> 
@@ -40,6 +139,47 @@ const Sidebar = () => {
             <h4>People</h4>
             
         </Link>
+        <Button onClick={handlelogout} variant="contained">Logout</Button>
+        <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Upload your Profile Pic
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          <div className="previewBox">
+        <div className="img-preview"/>
+        </div>
+        <input type="file" onChange={onChange}/>
+         {image && 
+         <>
+          <Cropper
+          ref={cropperRef}
+          style={{ height: 400, width: "100%" }}
+          zoomTo={0.5}
+          initialAspectRatio={1}
+          preview=".img-preview"
+          src={image}
+          viewMode={1}
+          minCropBoxHeight={100}
+          minCropBoxWidth={100}
+          background={false}
+          responsive={true}
+          autoCropArea={1}
+          checkOrientation={false} 
+          guides={true}
+        />
+       <Button variant="contained" onClick={getCropData}>Upload</Button>
+         </>
+         }
+          </Typography>
+        </Box>
+      </Modal>
+
     </div>
   )
 }

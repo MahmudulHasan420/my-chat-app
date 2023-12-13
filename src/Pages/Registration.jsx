@@ -59,9 +59,7 @@ const Registration = () => {
       email: userCredential.user.email,
       profile_picture : "https://firebasestorage.googleapis.com/v0/b/mychatapp-34da9.appspot.com/o/J23-%20107047%20%20Apr---%2031%20---23%20jpg-%20(1)%20(1).jpg?alt=media&token=11656920-8724-4ddf-bdec-7cf62fd3b45b"
     });
-    toast("verification mail send")
-    navigate("/login")
-    setLoader(true)
+ 
   // });
  
     

@@ -3,6 +3,7 @@ import { TbDotsVertical } from "react-icons/tb";
 import { CiSearch } from "react-icons/ci";
 import profile from "../assets/profile.png"
 import { getDatabase, ref, onValue } from "firebase/database";
+import Button from '@mui/material/Button';
 
 const PeopleCom = () => {
   const db = getDatabase();
@@ -59,7 +60,7 @@ const PeopleCom = () => {
           
           <div className='chatcomName'>
           <h5 className='pName'>{items.username}</h5>
-            <p className='chatcomTime'>10:30 PM</p>
+          <Button variant="text">Add</Button>
           </div>
         </div>
         ))
@@ -76,7 +77,7 @@ const PeopleCom = () => {
             
             <div className='chatcomName'>
             <h5 className='pName'>{items.username}</h5>
-              <p className='chatcomTime'>10:30 PM</p>
+            <Button variant="text" className='addButton'>Add</Button>
             </div>
           </div>
          

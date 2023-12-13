@@ -87,7 +87,7 @@ const Login = () => {
 
    }
    if(userCredential.user.emailVerified==true){
-    navigate("/home")
+    navigate("/page/home")
    }
     
     
