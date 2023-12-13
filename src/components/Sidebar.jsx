@@ -18,8 +18,7 @@ import { getAuth, updateProfile , signOut } from "firebase/auth";
 import { loggeduser } from '../slices/userSlice';
 import { useNavigate } from 'react-router';
 
-const defaultSrc =
-  "https://raw.githubusercontent.com/roadmanfong/react-cropper/master/example/img/child.jpg";
+
 
 const style = {
     position: 'absolute',
@@ -47,8 +46,7 @@ const Sidebar = () => {
        const [open, setOpen] = React.useState(false);
        const handleOpen = () => setOpen(true);
        const handleClose = () => setOpen(false);
-       const [image, setImage] = useState(defaultSrc);
-       const [cropData, setCropData] = useState("#");
+       const [image, setImage] = useState("");
        const cropperRef = createRef();
        const storage = getStorage();
        const auth = getAuth();
@@ -85,10 +83,8 @@ const Sidebar = () => {
     
       const getCropData = () => {
         if (typeof cropperRef.current?.cropper !== "undefined") {
-          setCropData(cropperRef.current?.cropper.getCroppedCanvas().toDataURL());
           const storageRef = ref(storage, userinfor.uid);
 
-        const message4 = 'data:text/plain;base64,5b6p5Y+344GX44G+44GX44Gf77yB44GK44KB44Gn44Go44GG77yB';
         uploadString(storageRef, cropperRef.current?.cropper.getCroppedCanvas().toDataURL(), 'data_url').then((snapshot) => {
 
             getDownloadURL(storageRef).then((downloadURL) => {
@@ -151,9 +147,13 @@ const Sidebar = () => {
             Upload your Profile Pic
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          {image ?
           <div className="previewBox">
-        <div className="img-preview"/>
-        </div>
+          <div className="img-preview"/>
+          </div>
+          :
+          <img src={userinfor.photoURL} alt="" className='previewBox'/>
+          }
         <input type="file" onChange={onChange}/>
          {image && 
          <>
@@ -174,6 +174,7 @@ const Sidebar = () => {
           guides={true}
         />
        <Button variant="contained" onClick={getCropData}>Upload</Button>
+       <Button variant="contained" onClick={()=>setImage("")}>cencel</Button>
          </>
          }
           </Typography>

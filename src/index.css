@@ -161,6 +161,7 @@ a:-webkit-any-link {
     height: 100px;
     border-radius: 50%;
     overflow: hidden;
+    display: block;
 }
 .img-preview{
     width: 100px;
