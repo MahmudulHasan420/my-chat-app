@@ -3,6 +3,7 @@ import { TbDotsVertical } from "react-icons/tb";
 import { CiSearch } from "react-icons/ci";
 import profile from "../assets/profile.png"
 import { getDatabase, ref, onValue } from "firebase/database";
+import { useSelector } from 'react-redux';
 
 
 
@@ -11,63 +12,76 @@ import { getDatabase, ref, onValue } from "firebase/database";
 
 const ChatCom = () => {
   const db = getDatabase();
-
+  let userinfo = useSelector(state =>state.activeuser.value)
   let [userList , setUserlist] =useState([])
   let [serachList , setSearchList] = useState([])
   let [searchlenth , setSearchlenth] =useState("")
+  let [friendList , setFriendList] =useState([])
 
   useEffect(()=>{
-    const starCountRef = ref(db, 'user');
-    onValue(starCountRef, (snapshot) => {
-      let userArray =[]
+    const friendsRef = ref(db, 'friends');
+onValue(friendsRef, (snapshot) => {
+  let frindarray =[]
+  snapshot.forEach((item)=>{
+    if(item.val().whosendid == userinfo.uid || item.val().whoreceiveid == userinfo.uid){
+      frindarray.push({...item.val(), fid:item.key})
+    }
+    
+    
 
-      snapshot.forEach(item=>{
-        userArray.push(item.val())
-
-      })
-      setUserlist(userArray) 
-      
-    });
+  })
+  setFriendList(frindarray)
+});
   },[])
-
 
   let handleSearch =(e)=>{
     let searchvalue = e.target.value
 
     setSearchlenth(searchvalue.length)
-
     
-
-  let user =  userList.filter(item=>item.username.toLowerCase().includes(e.target.value.toLowerCase()))
-
+  let user =  friendList.filter(item=>
+      item.whosendName.toLowerCase().includes(e.target.value.toLowerCase())||item.whoreceiveName.toLowerCase().includes(e.target.value.toLowerCase())
+    
+   
+  )
+  console.log(user);
   setSearchList(user)
 
   }
   return (
     <div className='chatcom'>
-        <div className='chatcomhaeder'>
-            <h2>Chat</h2>
-            <button className='chatcombtn'><TbDotsVertical/></button>
-        </div>
-        <div onChange={handleSearch} className='chatcomSearchBox'>
-        <input type="text" className='chatcomSearch' />
-       
-        <div className='searchIcon'> 
-            <CiSearch /> 
-            <p>Search</p>
-        </div>
-        </div>
+    <div className='chatcomhaeder'>
+        <h2>Friend</h2>
+        <button className='chatcombtn'><TbDotsVertical/></button>
+    </div>
+    <div onChange={handleSearch} className='chatcomSearchBox'>
+    <input type="text" className='chatcomSearch' />
+   
+    <div className='searchIcon'> 
+        <CiSearch /> 
+        <p>Search</p>
+    </div>
+    </div>
 
-        {serachList.length >0 ?
+    {serachList.length >0 ?
          serachList.map((items)=>(
+          userinfo.uid == items.whoreceiveid ?
           <div className='chatcomMsg'>
-          <img src={profile} alt="" />
+             <img src={profile} alt="" />
+             <div className='chatcomName'>
+             <h5 className='pName'>{items.whosendName}</h5>
+
+             </div>
+           </div>
           
+          :
+            <div className='chatcomMsg'>
+          <img src={profile} alt="" />
           <div className='chatcomName'>
-          <h5 className='pName'>{items.username}</h5>
-            <p className='chatcomTime'>10:30 PM</p>
+          <h5 className='pName'>{items.whoreceiveName}</h5>
           </div>
         </div>
+     
         ))
          :
 
@@ -76,24 +90,28 @@ const ChatCom = () => {
           <p>no match found</p>
           </>
           :
-          userList.map((items)=>(
+          friendList.map((items)=>(
+            userinfo.uid == items.whoreceiveid ?
             <div className='chatcomMsg'>
-            <img src={profile} alt="" />
+               <img src={profile} alt="" />
+               <div className='chatcomName'>
+               <h5 className='pName'>{items.whosendName}</h5>
+              
+               </div>
+             </div>
             
+            :
+              <div className='chatcomMsg'>
+            <img src={profile} alt="" />
             <div className='chatcomName'>
-            <h5 className='pName'>{items.username}</h5>
-              <p className='chatcomTime'>10:30 PM</p>
+            <h5 className='pName'>{items.whoreceiveName}</h5>
             </div>
           </div>
-         
        
-        ))
-         
+          ))               
          }
-
-        
-        
-    </div>
+  
+</div>
   )
 }
 

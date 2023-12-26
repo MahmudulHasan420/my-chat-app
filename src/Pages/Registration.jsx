@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import {toast } from 'react-toastify';
 import {AiFillEye , AiFillEyeInvisible} from 'react-icons/ai'
-import { getAuth, createUserWithEmailAndPassword,sendEmailVerification ,signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword,sendEmailVerification ,signInWithPopup, GoogleAuthProvider ,updateProfile  } from "firebase/auth";
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -51,16 +51,23 @@ const Registration = () => {
     createUserWithEmailAndPassword(auth, input.email , input.password)
   .then((userCredential) => {
 
-  //   sendEmailVerification(auth.currentUser)
-  // .then(() => {
-    console.log(userCredential)
-    set(ref(db, 'user/' +  userCredential.user.uid ),   {
-      username: input.fullname,
-      email: userCredential.user.email,
-      profile_picture : "https://firebasestorage.googleapis.com/v0/b/mychatapp-34da9.appspot.com/o/J23-%20107047%20%20Apr---%2031%20---23%20jpg-%20(1)%20(1).jpg?alt=media&token=11656920-8724-4ddf-bdec-7cf62fd3b45b"
-    });
- 
-  // });
+    updateProfile(auth.currentUser, {
+      displayName: input.fullname, photoURL:""
+    }).then(() => {
+      sendEmailVerification(auth.currentUser)
+      .then(() => {
+        
+        console.log(userCredential)
+        set(ref(db, 'user/' +  userCredential.user.uid ),   {
+          username: input.fullname,
+          email: userCredential.user.email,
+          profile_picture : "https://firebasestorage.googleapis.com/v0/b/mychatapp-34da9.appspot.com/o/J23-%20107047%20%20Apr---%2031%20---23%20jpg-%20(1)%20(1).jpg?alt=media&token=11656920-8724-4ddf-bdec-7cf62fd3b45b"
+        })
+        navigate("/login")
+     
+      });
+    })
+  
  
     
     
@@ -72,35 +79,35 @@ const Registration = () => {
    console.log(errorCode)
    setLoader(true)
     
-    if(errorCode.includes("weak")){
-      toast.error("password too weak")
-    }
+    // if(errorCode.includes("weak")){
+    //   toast.error("password too weak")
+    // }
    
   });
 
-    if(input.email==""){
-      toast.error("please enter a email");
-    }
-    else{
-      let emailverify =/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-      if(!emailverify.test(input.email)){
-        toast.error("please enter a valid email");
-      }
+    // if(input.email==""){
+    //   toast.error("please enter a email");
+    // }
+    // else{
+    //   let emailverify =/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+    //   if(!emailverify.test(input.email)){
+    //     toast.error("please enter a valid email");
+    //   }
      
-    }
+    // }
 
-    if(input.fullname == ""){
-      toast.error("please enter your name");
-    }
-    if(input.password==""){
-      toast.error("please enter a password");
-    }
-    else{
-      let verifypassword =/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
-      if(!verifypassword.test(input.password)){
-        toast.error("please enter a password with a lower case[a-z] a capital case [A-Z] a number[1-9] a special charecter");
-      }
-    }
+  //   if(input.fullname == ""){
+  //     toast.error("please enter your name");
+  //   }
+  //   if(input.password==""){
+  //     toast.error("please enter a password");
+  //   }
+  //   else{
+  //     let verifypassword =/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+  //     if(!verifypassword.test(input.password)){
+  //       toast.error("please enter a password with a lower case[a-z] a capital case [A-Z] a number[1-9] a special charecter");
+  //     }
+  //   }
   }
   let handlegooglelogin= ()=>{
     const provider = new GoogleAuthProvider();

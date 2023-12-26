@@ -1,103 +1,58 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { TbDotsVertical } from "react-icons/tb";
-import { CiSearch } from "react-icons/ci";
 import profile from "../assets/profile.png"
+import { getDatabase, ref, onValue, remove } from "firebase/database";
+import { useSelector } from 'react-redux';
+import Button from '@mui/material/Button';
 
 const BlockCom = () => {
+  const db = getDatabase();
+
+  let userinfo = useSelector(state =>state.activeuser.value)
+  let [blockList , setBlockList] = useState([])
+
+
+
+  useEffect(()=>{
+    const blockRef = ref(db, 'block');
+    onValue(blockRef, (snapshot) => {
+    let  blockarray =[]
+    snapshot.forEach((item)=>{
+      if(userinfo.uid == item.val().blockbyid){
+        blockarray.push({...item.val() , userid:item.key}) 
+      }
+     
+    })
+    setBlockList(blockarray)
+    ;
+    });
+  },[])
+
+  let handleunblock =(items)=>{
+    remove(ref(db, 'block/'+items.userid ))
+  } 
   return (
     <div className='chatcom'>
     <div className='chatcomhaeder'>
         <h2>Block List</h2>
         <button className='chatcombtn'><TbDotsVertical/></button>
     </div>
-    <div className='chatcomSearchBox'>
-    <input type="text" className='chatcomSearch' />
-   
-    <div className='searchIcon'> 
-        <CiSearch /> 
-        <p>Search</p>
-    </div>
-    </div>
-    <div className='chatcomMsg'>
+
+    {blockList.map((items)=>(
+      <div className='chatcomMsg'>
       <img src={profile} alt="" />
       
       <div className='chatcomName'>
-      <h5 className='pName'>Jenny Wilson</h5>
-        <p className='chatcomTime'>10:30 PM</p>
+      <h5 className='pName'>{items.blockName}</h5>
+      <Button variant="contained" onClick={()=>handleunblock(items)}>unblock</Button>
       </div>
     </div>
-    <div className='chatcomMsg'>
-      <img src={profile} alt="" />
-      
-      <div className='chatcomName'>
-      <h5 className='pName'>Jenny Wilson</h5>
-        <p className='chatcomTime'>10:30 PM</p>
-      </div>
-    </div>
-    <div className='chatcomMsg'>
-      <img src={profile} alt="" />
-      
-      <div className='chatcomName'>
-      <h5 className='pName'>Jenny Wilson</h5>
-        <p className='chatcomTime'>10:30 PM</p>
-      </div>
-    </div>
-    <div className='chatcomMsg'>
-      <img src={profile} alt="" />
-      
-      <div className='chatcomName'>
-      <h5 className='pName'>Jenny Wilson</h5>
-        <p className='chatcomTime'>10:30 PM</p>
-      </div>
-    </div>
-    <div className='chatcomMsg'>
-      <img src={profile} alt="" />
-      
-      <div className='chatcomName'>
-      <h5 className='pName'>Jenny Wilson</h5>
-        <p className='chatcomTime'>10:30 PM</p>
-      </div>
-    </div>
-    <div className='chatcomMsg'>
-      <img src={profile} alt="" />
-      
-      <div className='chatcomName'>
-      <h5 className='pName'>Jenny Wilson</h5>
-        <p className='chatcomTime'>10:30 PM</p>
-      </div>
-    </div>
-    <div className='chatcomMsg'>
-      <img src={profile} alt="" />
-      
-      <div className='chatcomName'>
-      <h5 className='pName'>Jenny Wilson</h5>
-        <p className='chatcomTime'>10:30 PM</p>
-      </div>
-    </div>
-    <div className='chatcomMsg'>
-      <img src={profile} alt="" />
-      
-      <div className='chatcomName'>
-      <h5 className='pName'>Jenny Wilson</h5>
-        <p className='chatcomTime'>10:30 PM</p>
-      </div>
-    </div>
-    <div className='chatcomMsg'>
-      <img src={profile} alt="" />
-      
-      <div className='chatcomName'>
-      <h5 className='pName'>Jenny Wilson</h5>
-        <p className='chatcomTime'>10:30 PM</p>
-      </div>
-    </div>
-    <div className='chatcomMsg'>
-      <img src={profile} alt="" />
-      
-      <div className='chatcomName'>
-      <h5 className='pName'>Jenny Wilson</h5>
-        <p className='chatcomTime'>10:30 PM</p>
-      </div>
-    </div>
+
+    ))
+
+    }
+    
+
 
     
 </div>

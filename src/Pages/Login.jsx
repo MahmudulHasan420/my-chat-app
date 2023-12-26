@@ -81,14 +81,16 @@ const Login = () => {
     dispatch(loggeduser(userCredential.user))
     localStorage.setItem("user" , JSON.stringify(userCredential.user))
 
-   if(userCredential.user.emailVerified==false){
-    console.log(userCredential.user.emailVerified)
-    toast("please verify your email")
+  //  if(userCredential.user.emailVerified==false){
+  //   console.log(userCredential.user.emailVerified)
+  //   toast("please verify your email")
 
-   }
-   if(userCredential.user.emailVerified==true){
-    navigate("/page/home")
-   }
+  //  }
+  navigate("/page/home")
+
+  //  if(userCredential.user.emailVerified==true){
+  //   navigate("/page/home")
+  //  }
     
     
   })
@@ -98,19 +100,19 @@ const Login = () => {
    
   });
 
-    if(input.email==""){
-      toast.error("please enter your email");
-    }
+    // if(input.email==""){
+    //   toast.error("please enter your email");
+    // }
     
-    if(input.password==""){
-      toast.error("please enter password");
-    }
+    // if(input.password==""){
+    //   toast.error("please enter password");
+    // }
   }
 
   let handleforgetpass = ()=>{
     sendPasswordResetEmail(auth, input.remail)
   .then(() => {
-    console.log("done")
+    
    
   })
   .catch((error) => {

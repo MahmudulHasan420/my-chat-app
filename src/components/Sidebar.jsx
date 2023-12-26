@@ -14,6 +14,7 @@ import Modal from '@mui/material/Modal';
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import { getStorage, ref, uploadString ,getDownloadURL } from "firebase/storage";
+import { getDatabase, ref as dref, set } from "firebase/database";
 import { getAuth, updateProfile , signOut } from "firebase/auth";
 import { loggeduser } from '../slices/userSlice';
 import { useNavigate } from 'react-router';
@@ -34,6 +35,16 @@ const style = {
 
 
 const Sidebar = () => {
+
+     const db = getDatabase();
+     const [open, setOpen] = React.useState(false);
+     const handleOpen = () => setOpen(true);
+     const handleClose = () => setOpen(false);
+     const [image, setImage] = useState("");
+     const cropperRef = createRef();
+     const storage = getStorage();
+     const auth = getAuth();
+  
         let  [pathnam , setPathnam] = useState()
         let handleLink =()=>{
         setPathnam(window.location.pathname)
@@ -41,16 +52,9 @@ const Sidebar = () => {
        let userinfor = useSelector(state =>state.activeuser.value)
        let dispatch= useDispatch()
        let navigate = useNavigate()
-       console.log(userinfor)
+       
 
-       const [open, setOpen] = React.useState(false);
-       const handleOpen = () => setOpen(true);
-       const handleClose = () => setOpen(false);
-       const [image, setImage] = useState("");
-       const cropperRef = createRef();
-       const storage = getStorage();
-       const auth = getAuth();
-    
+      
        
 
 
@@ -88,14 +92,21 @@ const Sidebar = () => {
         uploadString(storageRef, cropperRef.current?.cropper.getCroppedCanvas().toDataURL(), 'data_url').then((snapshot) => {
 
             getDownloadURL(storageRef).then((downloadURL) => {
-                console.log('File available at', downloadURL);
+               
                 updateProfile(auth.currentUser, {
                  photoURL: downloadURL
                   }).then(() => {
+                    set(dref(db, 'user/' +userinfor.uid), {
+                      username: userinfor.displayName,
+                      email: userinfor.email,
+                      profile_picture : downloadURL
+                    }).then(()=>{
+                      dispatch(loggeduser({...userinfor , photoURL:downloadURL}))
+                      localStorage.setItem('user', JSON.stringify({...userinfor , photoURL:downloadURL}))
+                      setImage("")
 
-                    dispatch(loggeduser({...userinfor , photoURL:downloadURL}))
-                    localStorage.setItem('user', JSON.stringify({...userinfor , photoURL:downloadURL}))
-                    setImage("")
+                    })
+                   
     
                   })
               });
