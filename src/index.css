@@ -190,6 +190,8 @@ a:-webkit-any-link {
 
 }
 .chatcombtn{
+    font-size: 16px;
+   font-weight: 600px;
    padding: 5px;
    border: 0;
    background: white;

@@ -51,7 +51,7 @@ onValue(friendsRef, (snapshot) => {
   return (
     <div className='chatcom'>
     <div className='chatcomhaeder'>
-        <h2>Friend</h2>
+        <h2>Chat</h2>
         <button className='chatcombtn'><TbDotsVertical/></button>
     </div>
     <div onChange={handleSearch} className='chatcomSearchBox'>
@@ -70,15 +70,17 @@ onValue(friendsRef, (snapshot) => {
              <img src={profile} alt="" />
              <div className='chatcomName'>
              <h5 className='pName'>{items.whosendName}</h5>
-
+              <h3 className='chatcomTime'>10:30pm</h3>
              </div>
+             
            </div>
           
           :
-            <div className='chatcomMsg'>
+          <div className='chatcomMsg'>
           <img src={profile} alt="" />
           <div className='chatcomName'>
           <h5 className='pName'>{items.whoreceiveName}</h5>
+           <h3 className='chatcomTime'>10:30pm</h3>
           </div>
         </div>
      
@@ -93,18 +95,19 @@ onValue(friendsRef, (snapshot) => {
           friendList.map((items)=>(
             userinfo.uid == items.whoreceiveid ?
             <div className='chatcomMsg'>
-               <img src={profile} alt="" />
-               <div className='chatcomName'>
-               <h5 className='pName'>{items.whosendName}</h5>
-              
-               </div>
-             </div>
+            <img src={profile} alt="" />
+            <div className='chatcomName'>
+            <h5 className='pName'>{items.whosendName}</h5>
+             <h3 className='chatcomTime'>10:30pm</h3>
+            </div>
+          </div>
             
             :
-              <div className='chatcomMsg'>
+            <div className='chatcomMsg'>
             <img src={profile} alt="" />
             <div className='chatcomName'>
             <h5 className='pName'>{items.whoreceiveName}</h5>
+             <h3 className='chatcomTime'>10:30pm</h3>
             </div>
           </div>
        
