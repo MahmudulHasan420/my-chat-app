@@ -260,3 +260,17 @@ a:-webkit-any-link {
     font-size: 12px;
     font-weight: 600;
 }
+.flex{
+    display: flex;
+}
+.crategroupinput{
+    margin-top: 20px;
+}
+.crategroupinput input{
+    width: 50%;
+    margin-left: 20px;
+}
+.chatcomSearch:focus{
+    padding-left: 5px;
+    
+}
